@@ -1,0 +1,231 @@
+{% extends "layouts/master.njk" %}
+
+{% block title %}
+  curd با vue
+{% endblock %}
+
+{% block content %}
+
+<vue-curd :routes="['{{url('')}}todo/vue/create','{{url('')}}todo/vue/delete']" :csrf="'{{_csrf}}'" :contentss="{{contents | dump}}" inline-template>
+<div>
+
+<div class="row text-center  ">
+
+    <div class="cell-md-4"></div>
+    <div class="cell-md-4">
+        <h2 style="font-family:dastkhat"></h2>
+        <form id="form1" class="form1" ref="form1" method="post"  v-on:submit.prevent="createContent" data-role="validator">
+
+            <div class="form-group">
+                <label>محتوا</label>
+                <input type="text" name="formContent" data-role="input"  class="metro-input">
+                <span class="invalid_feedback">
+                    پر کردن الزامی است
+                </span>
+    
+                <div class="error fg-red" v-if="validation.formContent" @click="hideValidation">@{validation.formContent[0]}</div>
+            </div>
+
+            <div class="form-group">
+                <button class="button primary">ایجاد</button>
+            </div>
+        </form>
+    </div>
+    <div class="cell-md-4"></div>
+
+</div>
+
+
+ <div class="row" v-if="showErrorMessage">
+    <div class="cell-md-4"></div>
+    <div class="cell-md-4 text-center message remark alert" @click="hideErrorMessage" id="message" style="font-family:titr">@{message}</div>
+    <div class="cell-md-4"></div>
+</div>
+
+<div class="row" v-if="showSuccessMessage">
+    <div class="cell-md-4"></div>
+    <div class="cell-md-4 text-center message remark success" @click="hideSuccessMessage" id="message" style="font-family:titr">@{message}</div>
+    <div class="cell-md-4"></div>
+</div>
+
+
+
+
+<div  v-if="contents" v-for="(item,index) in contents" class="row text-center extra ">
+
+	    <div class="cell-md-4"></div>
+        <div class="cell-md-4">
+            <span>
+                <form  class="form2"  ref="form2" method="post"  v-on:submit.prevent="deleteContent(index)">
+                    <input type="hidden" id="formId"   name="formId" v-bind:value='item.id' />
+                    <button class="button secondary outline mini">حذف</button>
+                </form>
+            </span>
+            <span>@{item.content}</span>
+            <span>- @{item.id} </span>
+        </div>
+        <div class="cell-md-4"></div>
+</div>
+
+
+    </div>
+</vue-curd>
+
+{% endblock %}
+
+
+{% block script %}
+{{ super() }}
+
+<script>
+    Vue.component('vue-curd', {
+        props: ['routes', 'csrf','contentss'],
+        data() {
+            return {
+                familly: "abyari",
+                contents:[],
+                showErrorMessage: false,
+                showSuccessMessage: false,
+                validation: [],
+                message:'',
+            }
+        },
+        created: function () {
+            //console.log(this.routes[0])
+            this.contents=this.contentss
+        },
+        methods: {
+             createContent : function() {
+                // do somthing
+               var vm = this
+
+               let address = vm.routes[0];
+               let _csrf = vm.csrf;
+
+               let formContent = this.$refs.form1.formContent.value;
+
+                let data = {
+                        formContent: formContent,
+                    };
+
+                let config={
+                        headers: {
+                            'Accept':'application/json',
+                            "X-CSRF-Token": _csrf,
+                            "X-Requested-With": "XMLHttpRequest",
+                        }
+                }  
+
+                axios.post(address,data,config)
+                    .then(response => { 
+
+	                    let data = response.data
+
+                        //-- server side error
+                        if(data.status==="error")
+                        {
+                            //-- error
+                            vm.message=data.message
+                            vm.showErrorMessage = true;
+
+                        }else{
+                            //-- success
+                            vm.message=data.message
+                            vm.contents=data.contents
+                            vm.showSuccessMessage = true;
+                        }
+                        
+                    })
+                    .catch(err => {
+
+                        let data = err.response.data
+                      
+                        if(err.response.status===422)
+                        {
+                            vm.validation=data.validation
+                        }else{
+                            vm.message="ارتباط با سرور امکان پذیر نیست";
+                            vm.showErrorMessages = true;
+                        }
+                        
+                    
+                    });
+                   
+            },
+            deleteContent: function (index) {
+                 // do somthing
+               const vm = this
+
+               let address = vm.routes[1];
+               let _csrf = vm.csrf;
+
+               let formId = vm.$refs.form2[index].formId.value;
+               
+
+                let data = {
+                        formId: formId,
+                    };
+
+                let config={
+                        headers: {
+                            'Accept':'application/json',
+                            "X-CSRF-Token": _csrf,
+                            "X-Requested-With": "XMLHttpRequest",
+                        }
+                }
+
+                 axios.post(address,data,config)
+                    .then(response => { 
+
+	                    let data = response.data
+
+                        //-- server side error
+                        if(data.status==="error")
+                        {
+                            //-- error
+                            vm.message=data.message
+                            vm.showErrorMessage = true;
+
+                        }else{
+                            //-- success
+                            vm.message=data.message
+                            vm.contents=data.contents
+                            vm.showSuccessMessage = true;
+                        }
+                        
+                    })
+                    .catch(err => {
+
+                        let data = err.response.data
+                      
+                        if(err.response.status===422)
+                        {
+                            vm.validation=data.validation
+                        }else{
+                            vm.message="ارتباط با سرور امکان پذیر نیست";
+                            vm.showErrorMessages = true;
+                        }
+                        
+                    });
+
+
+            },
+
+            hideErrorMessage: function () {
+                this.showErrorMessage = false;
+                this.message='';
+            },
+
+            hideSuccessMessage: function () {
+                this.showSuccessMessage = false;
+                this.message='';
+            },
+
+             hideValidation: function () {
+                this.validation =[];
+            },
+        }
+    });
+</script>
+
+{% endblock %}

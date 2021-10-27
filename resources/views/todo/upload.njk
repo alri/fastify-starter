@@ -1,0 +1,84 @@
+{% extends "layouts/master.njk" %}
+
+{% block title %}
+	آپلود فایل todo
+{% endblock %}
+
+{% block content %}
+
+<div class="row text-center  ">
+
+	<div class="cell-md-4"></div>
+    <div class="cell-md-4">
+        <h2 style="font-family:dastkhat"></h2>
+        <form method="post" action="{{url('todo/upload')}}" data-role="validator" data-interactive-check="true"  encType="multipart/form-data">
+            
+
+             <div class="form-group">
+                <label>انتخاب فایل</label>
+                <input type="file" name="formFile"  data-validate="required" class="metro-input">
+                <span class="invalid_feedback">
+                    پر کردن الزامی است
+                </span>
+
+                <div class="error">
+                    {% if flashMessage.formFileError !=null %}
+                        {% for error in flashMessage.formFileError %}
+                            <div class="message fg-red">{{error}}</div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="form-group">
+                <button class="button primary">آپلود</button>
+            </div>
+        </form>
+    </div>
+    <div class="cell-md-4"></div>
+
+
+    <div class="cell-md-4"></div>
+    <div class="cell-md-4 text-center">
+    
+        {% if flashMessage.errors !=null %}
+            {% for error in flashMessage.errors %}
+                <div class="message remark alert">
+                    {{error}}
+                </div>
+            {% endfor %}
+        {% endif %}
+
+
+        {% if flashMessage.error !=null %}
+            <div class="message remark warning">
+                {{flashMessage.error}}
+            </div>
+        {% endif %}
+
+
+        {% if flashMessage.success!=null %}
+            <div class="message remark success">
+                {{flashMessage.success}}
+            </div>
+        {% endif %}
+    </div>
+    <div class="cell-md-4"></div>
+	
+</div>
+
+{% endblock %}
+
+
+{% block script %}
+       {{ super() }}
+
+	 <script>
+    $(function () {
+        $('.message').click(function (e) {
+            $(".message").empty();
+            $('.message').hide();
+        });
+    });
+</script>
+{% endblock %}

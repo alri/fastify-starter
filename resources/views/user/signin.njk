@@ -1,0 +1,114 @@
+{% extends "layouts/master.njk" %}
+
+
+{%block title%}
+ورود
+{%endblock%}
+
+{% block content %}
+
+<div class="row" >
+
+    <div class="cell-md-4"></div>
+
+    <div class="cell-md-4 text-center">
+
+        <h2 style="font-family:dastkhat">فرم ورود کاربر</h2>
+        <form method="POST" action="{{url('signin')}}" data-role="validator" 
+                            data-interactive-check="true">
+
+            <input type='hidden'   name='_csrf'  value='{{_csrf}}'>
+      
+
+            <div class="form-group">
+                <label>نام کاربری</label>
+                <input type="text" name="formUser" data-role="input" data-validate="required minlength=4"
+                    class="metro-input">
+                <span class="invalid_feedback">
+                    پرکردن الزامی است
+                </span>
+
+                <div class="error">
+                    {% if flashMessage.formUserError !=null %}
+                        {% for error in flashMessage.formUserError %}
+                            <div class="message fg-red">{{error}}</div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+            </div>
+
+            <br>
+
+            <div class="form-group">
+                <label>رمز عبور</label>
+                <input type="password" name="formPassword" data-role="password" data-validate="required"
+                    class="metro-input" />
+                <span class="invalid_feedback">
+                    پرکردن الزامی است
+                </span>
+
+                <div class="error">
+                    {% if flashMessage.formPasswordError !=null %}
+                        {% for error in flashMessage.formPasswordError %}
+                            <div class="message fg-red">{{error}}</div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+            </div>
+
+
+            <div class="form-group">
+                <button class="button primary">ورود</button>
+            </div>
+        </form>
+    </div>
+
+    <div class="cell-md-4"></div>
+
+
+    <div class="cell-md-4"></div>
+    <div class="cell-md-4 text-center">
+    
+        {% if flashMessage.errors !=null %}
+            {% for error in flashMessage.errors %}
+                <div class="message remark alert">
+                    {{error}}
+                </div>
+            {% endfor %}
+        {% endif %}
+
+
+        {% if flashMessage.error !=null %}
+            <div class="message remark warning">
+                {{flashMessage.error}}
+            </div>
+        {% endif %}
+
+
+        {% if flashMessage.success!=null %}
+            <div class="message remark success">
+                {{flashMessage.success}}
+            </div>
+        {% endif %}
+    </div>
+    <div class="cell-md-4"></div>
+    
+</div>
+
+{% endblock %}
+
+
+{%block script %}
+
+{{super()}}
+
+<script>
+    $(function () {
+        $('.message').click(function (e) {
+            $(".message").empty();
+            $('.message').hide();
+        });
+    });
+</script>
+
+{%endblock%}

@@ -1,0 +1,17 @@
+{% extends "layouts/master.njk" %}
+
+
+{%block title%}
+پنل کاربری
+{%endblock%}
+
+{% block content %}
+    <div class="row" >
+        <div class="cell-md-12 text-center">
+            <h2>به صفحه کاربری خوش آمدی</h2>
+            <h4>  username :  {{user.username}}</h4>
+            <h4> id : {{user.id}}</h4>
+        </div>
+    </div>
+    
+{%endblock%}

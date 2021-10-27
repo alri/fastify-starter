@@ -1,0 +1,37 @@
+{% extends "layouts/master.njk" %}
+
+{% block title %}
+	صفحه اصلی
+{% endblock %}
+
+{% block content %}
+
+<div class="row text-center  ">
+
+	<div class="cell-md-12">
+		 {% if flashMessage.info !=null %}
+          
+                <div class="message remark alert">
+                    {{flashMessage.info}}
+                </div>
+
+            {% else %}
+
+            <div> No Flash Exist ! </div>
+          
+        {% endif %}
+	</div>
+	
+</div>
+
+
+{% endblock %}
+
+
+{% block script %}
+       {{ super() }}
+
+	   <script>
+	   		console.log("index page script run");
+	   </script>
+{% endblock %}

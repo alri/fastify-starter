@@ -1,0 +1,171 @@
+{% extends "layouts/master.njk" %}
+
+{% block title %}
+	 نمایش رکورد ها
+{% endblock %}
+
+{% block content %}
+
+
+{%for item in pagination.docs %}
+<div  id="row{{item.id}}" class="row text-center extra ">
+
+
+	    <div class="cell-md-4"></div>
+        <div class="cell-md-4">
+            <span>
+                <form  class="form1">
+                    <input type="hidden"   name="formId" value='{{item.id}}' />
+                   <button class="button secondary outline mini">حذف</button>
+                </form>
+            </span>
+            <span><a class="button primary outline mini" href="{{url('todo/jq/update',{id:item.id})}}" target="_blank" role="button">update</a></span>
+            <span>{{item.content}}</span>
+            <span>-{{item.id}} </span>
+        </div>
+        <div class="cell-md-4"></div>
+
+</div>
+{%endfor%}
+
+
+<div class="row">
+    <div class="cell-md-3"></div>
+    <div class="cell-md-6 text-center">
+      {%if(pagination.hasNextPage)%}
+            <div><a id="LoadMore" class="button" href="{{pagination.nextPage}}" role="button">Load More</a></div>
+      {%endif%}
+    </div>
+    <div class="cell-md-3"></div>
+</div>
+
+<div class="row" >
+    <div class="cell-md-3"></div>
+    <div class="cell-md-6" class="text-center" id="message" style="font-family:titr"></div>
+    <div class="cell-md-3"></div>
+</div>
+
+{% endblock %}
+
+
+{% block script %}
+    {{ super() }}
+
+
+<script>
+$(function () {
+
+    //------------ load more
+    $('#LoadMore').click(function(event){
+        event.preventDefault();
+        let page= $(this).attr('href')
+
+         var params = {
+            page: page,
+        };
+
+        $.ajax({
+            url: "{{url('')}}todo/jq/read/",
+            method: "GET",
+            crossDomain: true,
+            data: params,
+            headers: {"X-CSRF-Token": "{{_csrf}}" , "X-Requested-With": "XMLHttpRequest"},
+        }).then(
+            function (response) {
+                let data =JSON.parse(response)
+               
+                //-- add extra items
+               data.pagination.docs.forEach((item, key) => {
+
+                            $('.extra').append(`
+	                                <div class="cell-md-4"></div>
+                                    <div class="cell-md-4">
+                                        <span>
+                                            <form  class="form1">
+                                                <input type="hidden"   name="formId" value='${item.id}' />
+                                                <button class="button secondary outline mini">حذف</button>
+                                            </form>
+                                        </span>
+                                
+                                         <span>${item.content}</span>
+                                         <span>${item.id} </span>
+                                         <span><a class="button primary outline mini" href="{{url()}}update/${item.id}" target="_blank" role="button">update</a></span>
+                                    </div>
+                                <div class="cell-md-4"></div>
+                               
+                            `);
+                });
+
+                //remobe button
+                if(!data.pagination.hasNextPage)
+                {
+                    $('#LoadMore').remove()
+                }else{
+                     $("#LoadMore").attr("href",data.pagination.nextPage);
+                }
+            },
+            function (err) {
+                //console.log(err.status, err.statusText);
+                
+                //--- error message
+                $('#message').empty()
+                $('#message').append("<div class='message remark alert'></div>")
+                $('.alert').html(" ارتباط با سرور ممکن نیست");
+            }
+        )
+
+
+    })
+
+    //------------- update
+    $('.form1').submit(function (event) {
+        
+        event.preventDefault(); 
+       
+        var $form = $(this);
+        var formId = $form.find("input[name='formId']").val();
+       
+        var params = {
+            formId: formId,
+        };
+       
+
+        $.ajax({
+            url: "{{url('')}}todo/jq/delete",
+            method: "post",
+            data: params,
+            headers: {"X-CSRF-Token": "{{_csrf}}" , "X-Requested-With": "XMLHttpRequest" },
+        }).then(
+            function (response) {
+                let data =JSON.parse(response)
+                $("#row" + data.id).remove();
+
+                //--success message
+                $('#message').empty()
+                $('#message').append("<div class='message remark success'></div>");  
+                $('.success').html(data.message+'...'+'رکورد شماره'+data.id);
+            },
+            function (err) {
+                //console.log(err.status, err.statusText);
+                
+                //--- error message
+                $('#message').empty()
+                $('#message').append("<div class='message remark alert'></div>")
+                $('.alert').html(" ارتباط با سرور ممکن نیست");
+            }
+        )
+
+        //return false;
+    });
+});
+</script>
+   
+<script>
+    $(function () {
+        $('#message').click(function (e) {
+            $(".message").remove();
+        })
+    });
+</script>
+
+{% endblock %}

@@ -1,0 +1,21 @@
+{
+    "/public/js/app.js": "/public/js/app.js",
+    "/public/dist/js/spa.js": "/public/dist/js/spa.js",
+    "/public/css/app.css": "/public/css/app.css",
+    "/public/dist/css/spa.css": "/public/dist/css/spa.css",
+    "/public/fonts/a.eot": "/public/fonts/a.eot",
+    "/public/fonts/a.otf": "/public/fonts/a.otf",
+    "/public/fonts/a.svg": "/public/fonts/a.svg",
+    "/public/fonts/a.ttf": "/public/fonts/a.ttf",
+    "/public/fonts/a.woff": "/public/fonts/a.woff",
+    "/public/fonts/b.eot": "/public/fonts/b.eot",
+    "/public/fonts/b.otf": "/public/fonts/b.otf",
+    "/public/fonts/b.svg": "/public/fonts/b.svg",
+    "/public/fonts/b.ttf": "/public/fonts/b.ttf",
+    "/public/fonts/b.woff": "/public/fonts/b.woff",
+    "/public/fonts/c.eot": "/public/fonts/c.eot",
+    "/public/fonts/c.otf": "/public/fonts/c.otf",
+    "/public/fonts/c.svg": "/public/fonts/c.svg",
+    "/public/fonts/c.ttf": "/public/fonts/c.ttf",
+    "/public/fonts/c.woff": "/public/fonts/c.woff"
+}

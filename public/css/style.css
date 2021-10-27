@@ -1,0 +1,36 @@
+
+	@font-face {
+		font-family: 'titr';
+		src: url('../fonts/farsi/c.eot');
+		src: url('../fonts/farsi/c.eot#iefix') format('eot'),
+			url('../fonts/farsi/c.woff') format('woff'),
+			url('../fonts/farsi/c.ttf') format('truetype');
+		font-weight: normal;
+		font-style: normal;
+	}
+
+
+	@font-face {
+		font-family: 'dastkhat';
+		src: url('../fonts/farsi/a.eot');
+		src: url('../fonts/farsi/a.eot#iefix') format('eot'),
+			url('../fonts/farsi/a.woff') format('woff'),
+			url('../fonts/farsi/a.ttf') format('truetype');
+		font-weight: normal;
+		font-style: normal;
+	}
+
+
+	@font-face {
+		font-family: 'matn';
+		src: url('../fonts/farsi/b.eot');
+		src: url('../fonts/farsi/b.eot#iefix') format('eot'),
+			url('../fonts/farsi/b.woff') format('woff'),
+			url('../fonts/farsi/b.ttf') format('truetype');
+		font-weight: normal;
+		font-style: normal;
+	}
+
+	body{
+		font-family:matn
+	}

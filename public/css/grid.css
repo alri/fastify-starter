@@ -1,0 +1,46 @@
+body {
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+}
+
+h3 {
+  margin-top: 2rem;
+}
+
+.row {
+  margin-bottom: 1rem;
+}
+.row .row {
+  margin-top: 1rem;
+  margin-bottom: 0;
+}
+.row .row .row {
+  margin-top: 1rem;
+  margin-bottom: 0;
+}
+[class*="cell"] {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  background-color: #ffffff;
+}
+
+.border{
+    border: 1px solid rgba(86, 61, 124, .2);
+}
+
+
+.container{
+	background-color: #fafafa;
+	padding-top:  1rem;
+	border: 2px solid rgba(86, 61, 124, .2);
+}
+
+.alert{
+	 padding-top: 0.5rem;
+   padding-bottom: 0.5rem;
+}
+
+hr {
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}

@@ -1,0 +1,121 @@
+{% extends "layouts/master.njk" %}
+
+{% block title %}
+ایجاد محتوا با JQ
+{% endblock %}
+
+{% block content %}
+
+<div class="row text-center  ">
+
+    <div class="cell-md-4"></div>
+    <div class="cell-md-4">
+        <h2 style="font-family:dastkhat"></h2>
+        <form id="form1" data-role="validator" action="javascript:" data-interactive-check="true"
+              data-on-validate-form="ajaxCall()">
+
+            <div class="form-group">
+                <label>محتوا</label>
+                <input type="text" name="formContent" data-role="input" data-validate="required" class="metro-input">
+                <span class="invalid_feedback">
+                    پر کردن الزامی است
+                </span>
+
+                <div class="error" id="formContent"></div>
+            </div>
+
+            <div class="form-group">
+                <button class="button primary">ایجاد</button>
+            </div>
+        </form>
+    </div>
+    <div class="cell-md-4"></div>
+
+
+    <div class="cell-md-4"></div>
+    <div class="cell-md-4 text-center" id="message" style="font-family:titr"></div>
+    <div class="cell-md-4"></div>
+
+</div>
+
+{% endblock %}
+
+
+{% block script %}
+{{ super() }}
+
+<script>
+
+        function ajaxCall() {
+
+            var $form = $('#form1');
+            var formContent = $form.find("input[name='formContent']").val();
+
+            var params = {
+                formContent: formContent,
+            };
+
+
+            $.ajax({
+                url: "{{url('')}}todo/jq/create",
+                method: "post",
+                data: params,
+                headers: {
+                    "X-CSRF-Token": "{{_csrf}}",
+                    "X-Requested-With": "XMLHttpRequest"
+                },
+            }).then(
+                function (response) {
+                    
+                    let data = JSON.parse(response)
+                    
+                    //------------- Server Side Error
+                    if(data.status==="error"){
+                        $('#message').empty()
+                        $.each( data.errors, function( key, value ) {
+                            $('#message').append("<div class='message remark alert'>"+value+"</div>");
+                        });
+                    }else{
+                       //----------- Success Message
+                        $('#message').empty()
+                        $('#message').append("<div class='message remark success'></div>");
+                        $('.success').html(data.message);
+                    }
+
+                },
+                function (err) {
+                    //console.log(err.status, err.statusText);
+                    let data = JSON.parse(err.response)
+                    if(err.status===422)
+                    {
+                        //--validation error
+                        for (const [key, value] of Object.entries(data.validation)) {
+                           if(key){
+                                const element='#'+key
+                                $(element).empty()
+                                $(element).append("<div class='message fg-red'>"+value+"</div>");
+                           }
+                        }
+
+                    }else{
+                        //--- error message
+                        $('#message').empty()
+                        $('#message').append("<div class='message remark alert'>"+data.message+"</div>")
+                    }
+                }
+            )
+        };
+</script>
+
+<script>
+    $(function () {
+        $('.error').click(function (e) {
+            $('.message').remove();
+        });
+
+        $('#message').click(function (e) {
+           $('.message').remove();
+        });
+    });
+</script>
+{% endblock %}
